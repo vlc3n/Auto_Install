@@ -2,8 +2,6 @@
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 write("Skriptausfuehrung aktiviert")
 
-mkdir C:\tools
-
 write("Lade Scoop herunter...")
 # Scoop runterladen
 irm get.scoop.sh | iex | Out-Null
@@ -23,7 +21,7 @@ scoop install thunderbird
 scoop install 7zip
 
 # Scoop  deinstallieren
-rmdir C:\Users\$env:UserName
+rmdir C:\Users\$env:UserName\scoop\
 write("Scoop wurde wieder entfernt.")
 
 PAUSE
