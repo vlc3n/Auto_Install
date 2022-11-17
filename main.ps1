@@ -21,8 +21,6 @@ scoop install firefox
 scoop install thunderbird
 scoop install 7zip
 
-# Scoop  deinstallieren
-rmdir C:\Users\$env:UserName\scoop\
-write("Scoop wurde wieder entfernt.")
+write("Scoop Ordner darf nicht vom System entfernt werden da dort die Programme installiert sind. Wird in zukunft geaendert.")
 
 PAUSE
