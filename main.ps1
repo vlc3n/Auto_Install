@@ -4,7 +4,7 @@ write("Skriptausfuehrung aktiviert")
 
 write("Lade Scoop herunter...")
 # Scoop runterladen
-irm get.scoop.sh | iex | Out-Null
+irm get.scoop.sh | iex
 
 # Scoop "Extra" Bucket installieren fuer weitere Pakete
 write("Installiere Bucket Extra")
