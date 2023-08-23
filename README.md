@@ -1,1 +1,1 @@
-# PS_Scoop
+Auto-Install von Anwendungen
