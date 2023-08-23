@@ -1,4 +1,4 @@
-# Definieren Sie die Installationspfade für die Anwendungen
+# Definiere die Installationspfade für die Anwendungen
 $Installationspfade = @{
     'digiKam' = 'C:\Program Files\digiKam'
     'OnlyOffice' = 'C:\Program Files\OnlyOffice'
@@ -10,7 +10,7 @@ $Installationspfade = @{
     '7-Zip' = 'C:\Program Files\7-Zip'
 }
 
-# Definieren Sie die direkten Download-Links für die Installationsdateien
+# Definiere die direkten Download-Links für die Installationsdateien
 $Installationsdateien = @{
     'digiKam' = 'https://download.digikam.org/digiKam-7.0.0-win64.exe'
     'OnlyOffice' = 'https://download.onlyoffice.com/install/desktop/editors/win/onlyoffice-desktopeditors-x64.exe'
@@ -47,7 +47,7 @@ function Install-Application {
     }
 }
 
-# Installieren Sie die Anwendungen
+# Installiere die Anwendungen
 foreach ($app in $Installationspfade.Keys) {
     Install-Application -AppName $app
 }
