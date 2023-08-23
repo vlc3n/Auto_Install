@@ -40,7 +40,7 @@ function Check-And-Download-Update {
             $RemoteVersion = (Invoke-WebRequest -Uri $InstallerUrl).Headers['x-amz-meta-file-version']
             if ($RemoteVersion -gt $InstalledVersion) {
                 Write-Host "Eine neuere Version von $AppName ist verfügbar. Aktualisiere..."
-                
+
                 # Herunterladen der Installationsdatei
                 $InstallerPath = Join-Path $env:TEMP "$AppName-Installationsdatei.exe"
                 Start-BitsTransfer -Source $InstallerUrl -Destination $InstallerPath -TransferType Download
@@ -76,6 +76,12 @@ function Install-Application {
         # Herunterladen der Installationsdatei
         $InstallerPath = Join-Path $env:TEMP "$AppName-Installationsdatei.exe"
         Start-BitsTransfer -Source $InstallerUrl -Destination $InstallerPath -TransferType Download
+
+        # Warten, bis der Download abgeschlossen ist
+        Write-Host "Warte auf den Abschluss des Downloads für $AppName..."
+        while ((Get-BitsTransfer -AllUsers | Where-Object { $_.JobId -eq $InstallerPath }) -ne $null) {
+            Start-Sleep -Seconds 5
+        }
 
         # Installieren der Anwendung ohne Benutzeroberfläche anzuzeigen
         Start-Process -FilePath $InstallerPath -ArgumentList "/S" -NoNewWindow -Wait
