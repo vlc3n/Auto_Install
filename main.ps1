@@ -1,4 +1,4 @@
-# Definiere die Installationspfade für die Anwendungen
+# Definieren Sie die Installationspfade für die Anwendungen
 $Installationspfade = @{
     'digiKam' = 'C:\Program Files\digiKam'
     'OnlyOffice' = 'C:\Program Files\OnlyOffice'
@@ -10,8 +10,8 @@ $Installationspfade = @{
     '7-Zip' = 'C:\Program Files\7-Zip'
 }
 
-# Definiere die direkten Download-Links für die Installationsdateien
-$Installationsdateien = @{
+# Definieren Sie die direkten Download-Links für die Installationsdateien
+$DownloadLinks = @{
     'digiKam' = 'https://download.digikam.org/digiKam-7.0.0-win64.exe'
     'OnlyOffice' = 'https://download.onlyoffice.com/install/desktop/editors/win/onlyoffice-desktopeditors-x64.exe'
     'SumatraPDF' = 'https://www.sumatrapdfreader.org/dl/SumatraPDF-3.4-x64-install.exe'
@@ -22,13 +22,44 @@ $Installationsdateien = @{
     '7-Zip' = 'https://www.7-zip.org/a/7z2103-x64.exe'
 }
 
-# Funktion zum Herunterladen und Installieren einer Anwendung
-function Install-Application {
+# Funktion zum Überprüfen auf Updates und Herunterladen
+function Check-And-Download-Update {
     param (
         [string]$AppName
     )
     $InstallPath = $Installationspfade[$AppName]
-    $InstallerUrl = $Installationsdateien[$AppName]
+    $InstallerUrl = $DownloadLinks[$AppName]
+
+    if ($InstallPath -and $InstallerUrl) {
+        # Überprüfen, ob die Anwendung bereits installiert ist
+        if (Test-Path -Path $InstallPath) {
+            # Ermitteln der installierten Version
+            $InstalledVersion = (Get-ItemProperty -Path $InstallPath).VersionInfo.ProductVersion
+
+            # Überprüfen, ob eine neuere Version verfügbar ist
+            $RemoteVersion = (Invoke-WebRequest -Uri $InstallerUrl).Headers['x-amz-meta-file-version']
+            if ($RemoteVersion -gt $InstalledVersion) {
+                Write-Host "Eine neuere Version von $AppName ist verfügbar. Aktualisiere..."
+                Install-Application -AppName $AppName -InstallerUrl $InstallerUrl
+            } else {
+                Write-Host "$AppName ist auf dem neuesten Stand."
+            }
+        } else {
+            # Anwendung ist nicht installiert, daher installieren
+            Install-Application -AppName $AppName -InstallerUrl $InstallerUrl
+        }
+    } else {
+        Write-Host "Die Installationsdatei oder der Installationspfad für $AppName wurde nicht gefunden."
+    }
+}
+
+# Funktion zum Herunterladen und Installieren einer Anwendung
+function Install-Application {
+    param (
+        [string]$AppName,
+        [string]$InstallerUrl
+    )
+    $InstallPath = $Installationspfade[$AppName]
 
     if ($InstallPath -and $InstallerUrl) {
         # Herunterladen der Installationsdatei
@@ -47,9 +78,9 @@ function Install-Application {
     }
 }
 
-# Installiere die Anwendungen
+# Überprüfen und Aktualisieren Sie die Anwendungen
 foreach ($app in $Installationspfade.Keys) {
-    Install-Application -AppName $app
+    Check-And-Download-Update -AppName $app
 }
 
-Write-Host "Die Installation der Anwendungen wurde abgeschlossen."
+Write-Host "Die Installation und Aktualisierung der Anwendungen wurde abgeschlossen."
