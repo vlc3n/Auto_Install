@@ -35,8 +35,8 @@ function Install-Application {
         $InstallerPath = Join-Path $env:TEMP "$AppName-Installationsdatei.exe"
         Invoke-WebRequest -Uri $InstallerUrl -OutFile $InstallerPath
 
-        # Installieren der Anwendung
-        Start-Process -Wait -FilePath $InstallerPath -ArgumentList "/S"  # Stille Installation
+        # Installieren der Anwendung ohne Benutzeroberfläche anzuzeigen
+        Start-Process -FilePath $InstallerPath -ArgumentList "/S" -NoNewWindow -Wait
 
         # Aufräumen: Installationsdatei löschen
         Remove-Item -Path $InstallerPath -Force
